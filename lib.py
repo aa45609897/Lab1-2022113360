@@ -10,6 +10,52 @@ from graphviz import Digraph
 from collections import defaultdict
 from typing import Any, Set, Dict, Tuple,List
 
+def queryBridgeWords_r(graph: dict[dict],word1: str, word2: str) -> list[str]:
+    """
+    查找两个单词之间的桥接词
+    参数:
+        graph: 有向图字典 {source: {target: weight}}
+        word1: 起始词
+        word2: 目标词
+    返回:
+        结果字符串（根据不同情况返回不同提示）
+    """
+    # 转换为小写处理
+    word1 = word1.lower()
+    word2 = word2.lower()
+    
+    # 检查单词是否在图中
+    if word1 not in graph or word2 not in graph:
+        missing = []
+        if word1 not in graph: missing.append(word1)
+        if word2 not in graph: missing.append(word2)
+        # print(f"No {' or '.join(missing)} in the graph!")
+        return []
+    
+    # 查找桥接词
+    bridge_words = []
+    # 获取word1的所有直接后继节点（word3候选）
+    for word3 in graph.get(word1, {}):
+        # 检查word3是否能到达word2
+        if word2 in graph.get(word3, {}):
+            bridge_words.append(word3)
+    # 处理结果
+    if not bridge_words:
+        # print(f"No bridge words from {word1} to {word2}!")
+        pass
+    else:
+        # 格式化输出多个桥接词的情况
+        if len(bridge_words) == 1:
+            # print(f"The bridge word from {word1} to {word2} is: {bridge_words[0]}")
+            pass
+            
+        else:
+            front = ", ".join(bridge_words[:-1])
+            last = bridge_words[-1]
+            # print(f"The bridge words from {word1} to {word2} are: {front} and {last}.")
+
+    return bridge_words
+
 def find_shortest_path(graph: dict, word1: str, word2: str) -> tuple:
     """
     计算两个单词之间的最短路径

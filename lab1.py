@@ -1,6 +1,18 @@
+import re
 import sys
+import math
+import time
+import heapq
+import random
+import threading
+
+from graphviz import Digraph
+from collections import defaultdict
+from typing import Any, Set, Dict, Tuple,List
+
 from lib import *
 
+#return Void的话除了使用指针就只能在函数里打印了
 def showDirectedGraph(G: dict[dict], output_file = None) -> None:
     """
     展示有向图：
@@ -46,7 +58,7 @@ def showDirectedGraph(G: dict[dict], output_file = None) -> None:
             print(f"\n无法生成图形文件（请确保已安装graphviz）: {e}")
 
 
-def queryBridgeWords(graph: dict[dict],word1: str, word2: str) -> list[str]:
+def queryBridgeWords(graph: dict[dict],word1: str, word2: str) -> str:
     """
     查找两个单词之间的桥接词
     参数:
@@ -77,18 +89,17 @@ def queryBridgeWords(graph: dict[dict],word1: str, word2: str) -> list[str]:
             bridge_words.append(word3)
     # 处理结果
     if not bridge_words:
-        print(f"No bridge words from {word1} to {word2}!")
+        return(f"No bridge words from {word1} to {word2}!")
     else:
         # 格式化输出多个桥接词的情况
         if len(bridge_words) == 1:
-            print(f"The bridge word from {word1} to {word2} is: {bridge_words[0]}")
+            return(f"The bridge word from {word1} to {word2} is: {bridge_words[0]}")
             
         else:
             front = ", ".join(bridge_words[:-1])
             last = bridge_words[-1]
-            print(f"The bridge words from {word1} to {word2} are: {front} and {last}.")
+            return(f"The bridge words from {word1} to {word2} are: {front} and {last}.")
 
-    return bridge_words
 
 def generateNewText(inputText: str, graph: dict) -> str:
     """
@@ -108,7 +119,7 @@ def generateNewText(inputText: str, graph: dict) -> str:
         word1, word2 = words[i], words[i+1]
         output.append(word1)
         # 查询桥接词
-        result = queryBridgeWords(graph, word1, word2)
+        result = queryBridgeWords_r(graph, word1, word2)
         
         # 解析结果并随机选择桥接词
         if len(result)==1:
@@ -147,7 +158,7 @@ def calcShortestPath(graph: dict, word1: str, word2: str = None) -> tuple:
             return find_all_shortest_paths(graph, word1)
     else:
         return None
-
+#python的float就是double
 def calPageRank(graph: dict, word: str = None, d: float = 0.85, use_tfidf: bool = False) -> float:
     """
     计算PageRank的接口函数
@@ -173,10 +184,12 @@ def calPageRank(graph: dict, word: str = None, d: float = 0.85, use_tfidf: bool 
         return pr.get(word, 0)
     else:
         return pr
+
+#randomWalk想要交互停止只能允许输入
 def randomWalk(graph: Dict[str, Dict[str, int]], 
                  start_word: str = None,
                  output_file: str = "random_walk.txt",
-                 interactive: bool = False) -> Tuple[List[str], Set[Tuple[str, str]]]:
+                 interactive: bool = False) -> str:
     """
     改进版随机游走（线程控制+非阻塞输入检测）
     
@@ -260,7 +273,7 @@ def randomWalk(graph: Dict[str, Dict[str, int]],
         for i, edge in enumerate(visited_edges, 1):
             f.write(f"{i}. {edge[0]} -> {edge[1]}\n")
 
-    return visited_nodes, visited_edges
+    return " -> ".join(visited_nodes)
 
 
 
@@ -301,7 +314,8 @@ def main(input_file: str) -> None:
         elif choice == '2':
             word1 = input("请输入第一个单词: ").strip()
             word2 = input("请输入第二个单词: ").strip()
-            queryBridgeWords(graph, word1, word2)
+            res = queryBridgeWords(graph, word1, word2)
+            print(res)
             
         elif choice == '3':
             input_text = input("请输入要插入桥接词的文本: ").strip()

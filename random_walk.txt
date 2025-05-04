@@ -1,9 +1,9 @@
 Random Walk Result:
-more -> data -> wrote
+a -> detailed -> report
 
 Total nodes: 3
 Total edges: 2
 
 Edge sequence:
-1. more -> data
-2. data -> wrote
+1. a -> detailed
+2. detailed -> report
