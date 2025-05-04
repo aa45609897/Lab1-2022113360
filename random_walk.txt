@@ -1,22 +1,9 @@
 Random Walk Result:
-more -> data -> so -> the -> data -> wrote -> a -> detailed -> report -> and -> shared -> the -> team -> but -> the -> report
+more -> data -> wrote
 
-Total nodes: 16
-Total edges: 15
+Total nodes: 3
+Total edges: 2
 
 Edge sequence:
-1. a -> detailed
-2. detailed -> report
-3. the -> data
-4. wrote -> a
-5. data -> wrote
-6. the -> report
-7. and -> shared
-8. but -> the
-9. report -> and
-10. team -> but
-11. the -> team
-12. so -> the
-13. data -> so
-14. shared -> the
-15. more -> data
+1. more -> data
+2. data -> wrote

@@ -76,11 +76,12 @@ def main(input_file: str) -> None:
         elif choice == '6':
             start_node = input("请输入起始节点(可选，直接回车随机选择): ").strip()
             output_file = input("请输入输出文件名(默认为random_walk.txt): ").strip() or "random_walk.txt"
+            hand_stop = input("使用手工停止（回车默认不使用）?(y/n): ").lower() == 'y'
             if start_node and start_node not in graph:
                 print(f"错误: 节点 '{start_node}' 不存在")
                 continue
             random_walk(graph, start_word=start_node if start_node else None, 
-                       output_file=output_file, interactive=True)
+                       output_file=output_file, interactive=hand_stop)
             
         else:
             print("无效输入，请重新选择")
